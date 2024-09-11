@@ -18,7 +18,7 @@ class ProcessBlobReferencesCommand extends Command
         $this->blobReferenceService = $blobReferenceService;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Process blob references in batches to detect inconsistencies.');
         $this->setName('app:process-blob-references');
