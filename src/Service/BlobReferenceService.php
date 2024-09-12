@@ -38,13 +38,13 @@ class BlobReferenceService
         }
     }
 
-    private function getTotalRowCount(string $table): int
+    protected function getTotalRowCount(string $table): int
     {
         // Get total number of rows in a given table
         return (int) $this->shardConnection->fetchOne("SELECT COUNT(*) FROM $table");
     }
 
-    private function fetchBatch(string $table, int $start, int $batchSize): array
+    protected function fetchBatch(string $table, int $start, int $batchSize): array
     {
         // Fetch a batch of rows based on the offset and limit
         return $this->shardConnection->fetchAllAssociative(
@@ -54,7 +54,7 @@ class BlobReferenceService
         );
     }
 
-    private function checkBlobConsistency(?string $bodyBlobID, ?string $headerBlobID)
+    protected function checkBlobConsistency(?string $bodyBlobID, ?string $headerBlobID)
     {
         if ($bodyBlobID) {
             $this->validateBlob($bodyBlobID);
@@ -64,7 +64,7 @@ class BlobReferenceService
         }
     }
 
-    private function validateBlob(string $blobID)
+    protected function validateBlob(string $blobID)
     {
         // Check if the blob exists in the BlobStorage table
         $numReferences = $this->globalConnection->fetchOne(
