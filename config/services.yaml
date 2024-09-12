@@ -1,6 +1,10 @@
 parameters:
 
 services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        
     # Define BlobReferenceService as a regular service with its required dependencies
     App\Service\BlobReferenceService:
         arguments:
