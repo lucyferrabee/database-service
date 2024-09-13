@@ -10,30 +10,29 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ProcessBlobReferencesCommand extends Command
 {
-    private BlobReferenceService $blobReferenceService;
+    protected static $defaultName = 'app:check-blob-references';
+    
+    private $blobReferenceService;
 
     public function __construct(BlobReferenceService $blobReferenceService)
     {
-        parent::__construct();
         $this->blobReferenceService = $blobReferenceService;
+        parent::__construct();
     }
 
-    protected function configure(): void
+    protected function configure()
     {
-        $this->setDescription('Process blob references in batches to detect inconsistencies.');
-        $this->setName('app:process-blob-references');
+        $this
+            ->setDescription('Checks the consistency of blob references.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $io->title('Starting blob reference consistency check...');
+        // Run the blob consistency check
+        $this->blobReferenceService->checkBlobConsistency($io);
 
-        // Start the processing
-        $this->blobReferenceService->processReferences($io);
-
-        $io->success('Finished processing blob references.');
         return Command::SUCCESS;
     }
 }
