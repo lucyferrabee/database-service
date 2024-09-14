@@ -2,7 +2,7 @@ doctrine:
     dbal:
         default_connection: shard
         connections:
-            shard:
+            proton_mail_shard:
                 url: '%env(resolve:DATABASE_URL)%'
-            global:
+            proton_mail_global:
                 url: '%env(resolve:DATABASE_GLOBAL_URL)%'
