@@ -1,12 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Model\Shard;
 
 class OutsideAttachment
 {
-    /**
-     * @var string|null
-     */
     public ?string $blobStorageID;
 
     public function getBlobStorageID(): ?string
@@ -14,9 +13,8 @@ class OutsideAttachment
         return $this->blobStorageID;
     }
 
-    public function setBlobStorageID(?string $blobStorageID): self
+    public function setBlobStorageID(?string $blobStorageID): void
     {
         $this->blobStorageID = $blobStorageID;
-        return $this;
     }
 }

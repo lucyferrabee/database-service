@@ -1,11 +1,10 @@
 parameters:
-
+# TODO: clean this up
 services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    # Shard connection definition
     doctrine.dbal.shard_connection:
         class: Doctrine\DBAL\Connection
         factory: [ '@doctrine.dbal.connection_factory', 'createConnection' ]
@@ -15,7 +14,6 @@ services:
             - null   # Event manager is optional, passing null
             - { }    # Optional: mapping types
 
-    # Global connection definition
     doctrine.dbal.global_connection:
         class: Doctrine\DBAL\Connection
         factory: [ '@doctrine.dbal.connection_factory', 'createConnection' ]
@@ -25,7 +23,6 @@ services:
             - null   # Event manager is optional, passing null
             - { }    # Optional: mapping types
 
-    # BlobConsistencyService
     App\Service\BlobConsistencyService:
         arguments:
             $shardConnection: '@doctrine.dbal.proton_mail_shard_connection'
@@ -33,7 +30,6 @@ services:
             $blobStorageService: '@App\Service\Global\BlobStorageService'
             $logger: '@monolog.logger.blob_consistency'
 
-    # Services for other models
     App\Service\Shard\MessageDataService:
         arguments:
             $shardConnection: '@doctrine.dbal.proton_mail_shard_connection'
@@ -50,7 +46,6 @@ services:
         arguments:
             $globalConnection: '@doctrine.dbal.proton_mail_global_connection'
 
-    # Register the command
     App\Command\CheckBlobConsistencyCommand:
         arguments:
             $getReferencesCounts: '@App\Service\GetReferencesCounts'
@@ -65,7 +60,6 @@ services:
         autoconfigure: true
         public: true
 
-    # Global Repository
     App\Repository\Global\GlobalRepository:
         arguments:
             $connection: '@doctrine.dbal.proton_mail_global_connection'
@@ -86,7 +80,6 @@ services:
             $connection: '@doctrine.dbal.proton_mail_global_connection'
         tags: ['repository']
 
-    # Shard Repository
     App\Repository\Shard\ShardRepository:
         arguments:
             $connection: '@doctrine.dbal.proton_mail_shard_connection'
@@ -112,7 +105,6 @@ services:
             $connection: '@doctrine.dbal.proton_mail_shard_connection'
         tags: ['repository']
 
-    # Automatically register services in the src/ directory
     App\:
         resource: '../src/'
         exclude:

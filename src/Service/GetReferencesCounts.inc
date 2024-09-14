@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Service;
 
 use App\Repository\Global\BlobStorageRepository;
@@ -47,7 +49,6 @@ class GetReferencesCounts
         $batchSize = 1000;
         $start = 0;
 
-        // Fetch blob references from each repository
         $refSentAttachment = $this->sentAttachmentRepository->getBlobReferences($start, $batchSize);
         $refSentMessage = $this->sentMessageRepository->getBlobReferences($start, $batchSize);
         $refAttachment = $this->attachmentRepository->getBlobReferences($start, $batchSize);
@@ -55,7 +56,6 @@ class GetReferencesCounts
         $refMessageData = $this->messageDataRepository->getBlobReferences($start, $batchSize);
         $refOutsideAttachment = $this->outsideAttachmentRepository->getBlobReferences($start, $batchSize);
 
-        // Combine all blob references
         $actualNumReferences = ArraySumService::sumArrayValues([
             $refSentAttachment,
             $refSentMessage,
@@ -65,7 +65,6 @@ class GetReferencesCounts
             $refOutsideAttachment,
         ]);
 
-        // Get the expected num references from the blob storage repository
         $numReferences = $this->blobStorageRepository->getNumReferences(array_keys($actualNumReferences));
 
         return [

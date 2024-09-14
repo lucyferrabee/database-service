@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Repository\Shard;
 
 use Doctrine\DBAL\Connection;

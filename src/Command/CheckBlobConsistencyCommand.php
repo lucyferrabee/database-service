@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Command;
 
 use App\Service\GetReferencesCounts;
@@ -35,20 +37,18 @@ class CheckBlobConsistencyCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        // TODO implement handling of different batch sizes via command
         $batchSize = (int) $input->getArgument('batchSize');
         $verbose = $input->getOption('more-info');
 
         $output->writeln('Starting blob consistency check...');
 
-        // Fetch references from the database
         $numReferences = $this->getReferencesCounts->getNumReferences();
         $actualNumReferences = $numReferences['actualNumReferences'];
         $expectedNumReferences = $numReferences['numReferences'];
 
-        // Compare actual references with expected references
         $inconsistencies = $this->findInconsistencies($actualNumReferences, $expectedNumReferences);
 
-        // Output results
         if ($verbose) {
             $output->writeln('Detailed results:');
             foreach ($inconsistencies as $inconsistency) {

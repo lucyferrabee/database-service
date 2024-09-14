@@ -1,16 +1,12 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Model\Global;
 
-/**
- * Class representing the structure of the `proton_mail_global.SentMessage` table.
- */
 class SentMessage
 {
-    /**
-     * @var string|null
-     */
-    public ?string $blobStorageID;
+    public string $blobStorageID;
 
     public function getBlobStorageID(): ?string
     {

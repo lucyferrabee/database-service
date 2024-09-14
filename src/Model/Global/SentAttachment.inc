@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Model\Global;
 
 class SentAttachment
 {
-    /**
-     * @var string|null
-     */
-    public ?string $blobStorageID;
+    public string $blobStorageID;
 
     public function getBlobStorageID(): ?string
     {
