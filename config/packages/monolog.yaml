@@ -1,6 +1,16 @@
 monolog:
-    channels:
-        - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+    channels: ['blob_consistency']
+    handlers:
+        main:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+        blob_consistency:
+            type: stream
+            path: "%kernel.logs_dir%/blob_consistency.log"
+            level: info
+            channels: ['blob_consistency']
+
 
 when@dev:
     monolog:

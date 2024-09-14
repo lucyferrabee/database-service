@@ -4,17 +4,56 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-        
-    # Define BlobReferenceService as a regular service with its required dependencies
-    App\Service\BlobReferenceService:
-        arguments:
-            $shardConnection: '@doctrine.dbal.shard'
-            $globalConnection: '@doctrine.dbal.global'
 
-    # Register the command and tag it as a console command
+    # Shard connection definition
+    doctrine.dbal.shard_connection:
+        class: Doctrine\DBAL\Connection
+        factory: [ '@doctrine.dbal.connection_factory', 'createConnection' ]
+        arguments:
+            - { url: '%env(resolve:DATABASE_URL)%' }
+            - null   # No configuration required
+            - null   # Event manager is optional, passing null
+            - { }    # Optional: mapping types
+
+    # Global connection definition
+    doctrine.dbal.global_connection:
+        class: Doctrine\DBAL\Connection
+        factory: [ '@doctrine.dbal.connection_factory', 'createConnection' ]
+        arguments:
+            - { url: '%env(resolve:DATABASE_GLOBAL_URL)%' }
+            - null   # No configuration required
+            - null   # Event manager is optional, passing null
+            - { }    # Optional: mapping types
+
+    # BlobConsistencyService
+    App\Service\BlobConsistencyService:
+        arguments:
+            $shardConnection: '@doctrine.dbal.shard_connection'
+            $globalConnection: '@doctrine.dbal.global_connection'
+            $blobStorageService: '@App\Service\Global\BlobStorageService'
+            $logger: '@monolog.logger.blob_consistency'
+
+    # Services for other models
+    App\Service\Shard\MessageDataService:
+        arguments:
+            $shardConnection: '@doctrine.dbal.shard_connection'
+
+    App\Service\Global\SentAttachmentService:
+        arguments:
+            $globalConnection: '@doctrine.dbal.global_connection'
+
+    App\Service\Global\BlobStorageService:
+        arguments:
+            $globalConnection: '@doctrine.dbal.global_connection'
+
+    App\Service\Global\AttachmentService:
+        arguments:
+            $globalConnection: '@doctrine.dbal.global_connection'
+
+    # Register the command
     App\Command\ProcessBlobReferencesCommand:
         arguments:
-            $blobReferenceService: '@App\Service\BlobReferenceService'
+            $blobConsistencyService: '@App\Service\BlobConsistencyService'
         tags:
             - { name: 'console.command' }
 
