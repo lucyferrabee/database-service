@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Tests;
 
+use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\TestCase;
 use App\Service\GetReferencesCounts;
 use App\Repository\Global\BlobStorageRepository;
@@ -48,6 +49,9 @@ class GetReferencesCountsTest extends TestCase
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public function testGetNumReferences()
     {
         // Define mock return values for repositories

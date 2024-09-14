@@ -39,8 +39,9 @@ A tool for managing and checking database blob consistency.
 ### Run the project
 
 - Enter docker container:
-```docker exec -it symfony_php /bin/bash```
-  
+    ```bash
+    docker exec -it symfony_php /bin/bash
+    ```
 - Check blob consistency:
     ```bash
     php bin/console app:check-blob-consistency
@@ -49,7 +50,11 @@ A tool for managing and checking database blob consistency.
     ```bash
     php bin/console app:check-blob-consistency --more-info
     ```
-
+- Run tests:
+    ```bash
+    ./vendor/bin/phpunit
+    ```
+  
 ## Development
 
 - **Future Improvements**:

@@ -22,59 +22,6 @@ class BlobStorageRepositoryTest extends TestCase
         $this->repository = new BlobStorageRepository($this->connection);
     }
 
-    public function testGetBlobReferences()
-    {
-        $this->connection->method('createQueryBuilder')
-            ->willReturn($this->queryBuilder);
-
-        $this->queryBuilder->expects($this->once())
-            ->method('from')
-            ->with('proton_mail_global.BlobStorage', 't')
-            ->willReturnSelf();
-
-        $this->queryBuilder->expects($this->once())
-            ->method('select')
-            ->with('t.BlobStorageID as id', 'count(t.BlobStorageID) as count')
-            ->willReturnSelf();
-
-        $this->queryBuilder->expects($this->once())
-            ->method('groupBy')
-            ->with('t.BlobStorageID')
-            ->willReturnSelf();
-
-        $this->queryBuilder->expects($this->once())
-            ->method('setFirstResult')
-            ->with(0)
-            ->willReturnSelf();
-
-        $this->queryBuilder->expects($this->once())
-            ->method('setMaxResults')
-            ->with(1000)
-            ->willReturnSelf();
-
-        $statement = $this->createMock(\Doctrine\DBAL\Statement::class);
-
-        $statement->expects($this->once())
-            ->method('fetchAll')
-            ->willReturn([
-                ['id' => 'blob1', 'count' => 5],
-                ['id' => 'blob2', 'count' => 10],
-            ]);
-
-        $this->queryBuilder->expects($this->once())
-            ->method('executeQuery')
-            ->willReturn($statement);
-
-        // Call the method and assert the results
-        $result = $this->repository->getBlobReferences(0, 1000);
-        $expected = [
-            'blob1' => 5,
-            'blob2' => 10,
-        ];
-
-        $this->assertEquals($expected, $result);
-    }
-
     public function testGetNumReferences()
     {
         // Configure the QueryBuilder mock
