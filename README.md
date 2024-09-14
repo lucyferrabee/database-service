@@ -45,6 +45,10 @@ A tool for managing and checking database blob consistency.
     ```bash
     php bin/console app:check-blob-consistency
     ```
+- Check blob consistency with more information:
+    ```bash
+    php bin/console app:check-blob-consistency --more-info
+    ```
 
 ## Development
 
