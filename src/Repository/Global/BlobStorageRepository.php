@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Repository\Global;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 
 class BlobStorageRepository
 {
@@ -15,6 +16,9 @@ class BlobStorageRepository
         $this->connection = $connection;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getNumReferences(array $ids): array
     {
         return $this->connection

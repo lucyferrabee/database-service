@@ -1,110 +1,78 @@
 parameters:
-# TODO: clean this up
+
 services:
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        autowire: true
+        autoconfigure: true
 
-    doctrine.dbal.shard_connection:
-        class: Doctrine\DBAL\Connection
-        factory: [ '@doctrine.dbal.connection_factory', 'createConnection' ]
-        arguments:
-            - { url: '%env(resolve:DATABASE_URL)%' }
-            - null   # No configuration required
-            - null   # Event manager is optional, passing null
-            - { }    # Optional: mapping types
-
-    doctrine.dbal.global_connection:
-        class: Doctrine\DBAL\Connection
-        factory: [ '@doctrine.dbal.connection_factory', 'createConnection' ]
-        arguments:
-            - { url: '%env(resolve:DATABASE_GLOBAL_URL)%' }
-            - null   # No configuration required
-            - null   # Event manager is optional, passing null
-            - { }    # Optional: mapping types
-
-    App\Service\BlobConsistencyService:
-        arguments:
-            $shardConnection: '@doctrine.dbal.proton_mail_shard_connection'
-            $globalConnection: '@doctrine.dbal.proton_mail_global_connection'
-            $blobStorageService: '@App\Service\Global\BlobStorageService'
-            $logger: '@monolog.logger.blob_consistency'
-
-    App\Service\Shard\MessageDataService:
-        arguments:
-            $shardConnection: '@doctrine.dbal.proton_mail_shard_connection'
-
-    App\Service\Global\SentAttachmentService:
-        arguments:
-            $globalConnection: '@doctrine.dbal.proton_mail_global_connection'
-
-    App\Service\Global\BlobStorageService:
-        arguments:
-            $globalConnection: '@doctrine.dbal.proton_mail_global_connection'
-
-    App\Service\Global\AttachmentService:
-        arguments:
-            $globalConnection: '@doctrine.dbal.proton_mail_global_connection'
-
+    # Command
     App\Command\CheckBlobConsistencyCommand:
         arguments:
             $getReferencesCounts: '@App\Service\GetReferencesCounts'
         tags:
             - { name: 'console.command' }
-        autowire: true
-        autoconfigure: true
         public: true
 
+    # Service
     App\Service\GetReferencesCounts:
-        autowire: true
-        autoconfigure: true
         public: true
-
-    App\Repository\Global\GlobalRepository:
-        arguments:
-            $connection: '@doctrine.dbal.proton_mail_global_connection'
-        tags: ['repository']
 
     App\Repository\Global\BlobStorageRepository:
         arguments:
             $connection: '@doctrine.dbal.proton_mail_global_connection'
-        tags: ['repository']
+        autowire: true
+        autoconfigure: true
 
     App\Repository\Global\SentAttachmentRepository:
         arguments:
             $connection: '@doctrine.dbal.proton_mail_global_connection'
-        tags: ['repository']
+        autowire: true
+        autoconfigure: true
 
     App\Repository\Global\SentMessageRepository:
         arguments:
             $connection: '@doctrine.dbal.proton_mail_global_connection'
-        tags: ['repository']
-
-    App\Repository\Shard\ShardRepository:
-        arguments:
-            $connection: '@doctrine.dbal.proton_mail_shard_connection'
-        tags: ['repository']
+        autowire: true
+        autoconfigure: true
 
     App\Repository\Shard\AttachmentRepository:
         arguments:
             $connection: '@doctrine.dbal.proton_mail_shard_connection'
-        tags: ['repository']
+        autowire: true
+        autoconfigure: true
 
     App\Repository\Shard\ContactDataRepository:
         arguments:
             $connection: '@doctrine.dbal.proton_mail_shard_connection'
-        tags: ['repository']
+        autowire: true
+        autoconfigure: true
 
     App\Repository\Shard\MessageDataRepository:
         arguments:
             $connection: '@doctrine.dbal.proton_mail_shard_connection'
-        tags: ['repository']
+        autowire: true
+        autoconfigure: true
 
     App\Repository\Shard\OutsideAttachmentRepository:
         arguments:
             $connection: '@doctrine.dbal.proton_mail_shard_connection'
-        tags: ['repository']
+        autowire: true
+        autoconfigure: true
 
+    App\Repository\Shard\BaseShardRepository:
+        arguments:
+            $connection: '@doctrine.dbal.proton_mail_shard_connection'
+        autowire: true
+        autoconfigure: true
+
+    App\Repository\Global\BaseGlobalRepository:
+        arguments:
+            $connection: '@doctrine.dbal.proton_mail_global_connection'
+        autowire: true
+        autoconfigure: true
+
+
+    # Generic service loader
     App\:
         resource: '../src/'
         exclude:

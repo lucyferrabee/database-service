@@ -1,6 +1,5 @@
 doctrine:
     dbal:
-        default_connection: proton_mail_shard
         connections:
             proton_mail_shard:
                 url: '%env(resolve:DATABASE_URL)%'

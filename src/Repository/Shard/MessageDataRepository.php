@@ -5,9 +5,8 @@ declare(strict_types = 1);
 namespace App\Repository\Shard;
 
 use Doctrine\DBAL\Connection;
-use App\Repository\BaseBlobRepository;
 
-class MessageDataRepository extends BaseBlobRepository
+class MessageDataRepository extends BaseShardRepository
 {
     public function __construct(Connection $connection, int $batchSize = 1000)
     {

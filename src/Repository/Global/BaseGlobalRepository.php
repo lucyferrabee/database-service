@@ -2,12 +2,12 @@
 
 declare(strict_types = 1);
 
-namespace App\Repository;
+namespace App\Repository\Global;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 
-abstract class BaseBlobRepository
+abstract class BaseGlobalRepository
 {
     protected Connection $connection;
     protected string $tableName;
@@ -32,20 +32,5 @@ abstract class BaseBlobRepository
             ->setMaxResults($batchSize)
             ->executeQuery()
             ->fetchAllKeyValue();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function getNumReferences(array $ids): array
-    {
-        return $this->connection
-            ->createQueryBuilder()
-            ->from($this->tableName)
-            ->select('BlobStorageID as id, NumReferences as num')
-            ->where('BlobStorageID IN (:ids)')
-            ->setParameter('ids', $ids, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
-            ->executeQuery()
-            ->fetchAllAssociative();
     }
 }

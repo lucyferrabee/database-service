@@ -38,7 +38,7 @@ services:
       MYSQL_PASSWORD: symfonypass
       MYSQL_DATABASE: proton_mail_global
     ports:
-      - "3308:3306"  # Note different port mapping
+      - "3308:3306"
     volumes:
       - db_global_data:/var/lib/mysql
       - ./docker/mysql/global:/docker-entrypoint-initdb.d
